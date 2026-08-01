@@ -347,9 +347,15 @@ resource "google_container_cluster" "gke_cluster" {
     }
   }
 
-  confidential_nodes {
-    enabled                    = var.enable_confidential_nodes
-    confidential_instance_type = var.confidential_instance_type
+  # Voyager-local: emit the block only when enabled. The provider marks
+  # confidential_nodes ForceNew, so unconditionally adding `enabled = false`
+  # to a cluster created without the block plans a full cluster replacement.
+  dynamic "confidential_nodes" {
+    for_each = var.enable_confidential_nodes ? [1] : []
+    content {
+      enabled                    = true
+      confidential_instance_type = var.confidential_instance_type
+    }
   }
 
 
