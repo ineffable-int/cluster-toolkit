@@ -342,6 +342,15 @@ resource "google_container_node_pool" "node_pool" {
       # Ignore local/ephemeral ssd configs as they are tied to machine types.
       node_config[0].ephemeral_storage_local_ssd_config,
       node_config[0].local_nvme_ssd_block_config,
+      # Voyager-local (II-891): GKE persists only placementPolicy.policyName —
+      # `type` never round-trips, so terraform re-sends it forever and every
+      # apply would trigger a full rolling node update.
+      placement_policy[0].type,
+      # Voyager-local: node versions are owned by GKE auto-upgrade within the
+      # cluster's maintenance policy. The module wires `version` to the master
+      # version, which patch-bumps ahead of nodes and would otherwise plan a
+      # rolling upgrade of every pool.
+      version,
     ]
     precondition {
       condition     = !(length(compact(local.input_reservation_suffixes)) > 0 && length((var.zones != null ? var.zones : [])) == 0)

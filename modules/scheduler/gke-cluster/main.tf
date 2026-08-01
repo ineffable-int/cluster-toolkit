@@ -395,6 +395,9 @@ resource "google_container_cluster" "gke_cluster" {
     ignore_changes = [
       node_config,
       min_master_version,
+      # Voyager-local: fleet membership is registered out-of-band (Connect
+      # Gateway); the module has no fleet support and would deregister it.
+      fleet,
     ]
     precondition {
       condition     = var.default_max_pods_per_node == null || var.networking_mode == "VPC_NATIVE"
