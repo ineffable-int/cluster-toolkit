@@ -112,7 +112,9 @@ locals {
     for index, manifest in local.enabled_manifests : index =>
     trim(replace(lower(
       (try(manifest.name, null) != null ? manifest.name :
-        "${substr((manifest.source != null && manifest.source != "") ? replace(basename(manifest.source), "/(\\.(tftpl|yaml|yml))+$/", "") : "${var.module_id}-raw", 0, 30)}-${substr(sha1(jsonencode(manifest)), 0, 7)}"
+        # Voyager-local: hash the legacy `modules/embedded/` module path so release
+        # names survive toolkit layout changes (v1.98 moved to `_modules/embedded/`).
+        "${substr((manifest.source != null && manifest.source != "") ? replace(basename(manifest.source), "/(\\.(tftpl|yaml|yml))+$/", "") : "${var.module_id}-raw", 0, 30)}-${substr(sha1(jsonencode(merge(manifest, { source = manifest.source == null ? null : replace(manifest.source, "/^.*?_?modules/embedded//", "modules/embedded/") }))), 0, 7)}"
       )
     ), "/[^a-z0-9-]+/", "-"), "-")
   }
