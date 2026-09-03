@@ -113,11 +113,12 @@ locals {
     for index, manifest in local.enabled_manifests : index =>
     trim(replace(lower(
       (try(coalesce(manifest.name, ""), "") != "" ? manifest.name :
-        "${substr((try(manifest.source, null) != null && manifest.source != "") ? replace(basename(manifest.source), "/(\\.(tftpl|yaml|yml))+$/", "") : "${var.module_id}-raw", 0, 30)}-${substr(sha1(join("|", [
-          try(manifest.source != null ? manifest.source : "", ""),
-          try(manifest.content != null ? manifest.content : "", ""),
-          join(",", try(keys(manifest.template_vars), []))
-        ])), 0, 7)}-${index}"
+        # Voyager-local: keep the pre-v1.105 fallback name, sha1(jsonencode(manifest))
+        # with no index suffix, and hash the legacy `modules/embedded/` module path, so
+        # release names survive toolkit layout changes (v1.98 moved to `_modules/embedded/`)
+        # and upstream's v1.105 hash change. Renaming an in-use Network release is a
+        # destroy+create that GKE Warden rejects.
+        "${substr((manifest.source != null && manifest.source != "") ? replace(basename(manifest.source), "/(\\.(tftpl|yaml|yml))+$/", "") : "${var.module_id}-raw", 0, 30)}-${substr(sha1(jsonencode(merge(manifest, { source = manifest.source == null ? null : replace(manifest.source, "/^.*?_?modules/embedded//", "modules/embedded/") }))), 0, 7)}"
       )
     ), "/[^a-z0-9-]+/", "-"), "-")
   }
