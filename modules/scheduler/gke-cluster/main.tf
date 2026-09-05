@@ -398,6 +398,9 @@ resource "google_container_cluster" "gke_cluster" {
       # Voyager-local: fleet membership is registered out-of-band (Connect
       # Gateway); the module has no fleet support and would deregister it.
       fleet,
+      # Voyager-local: every pool sets its own zones, and GKE rejects shrinking
+      # the cluster default ("accelerator nvidia-gb200 does not exist in zone").
+      node_locations,
     ]
     precondition {
       condition     = var.default_max_pods_per_node == null || var.networking_mode == "VPC_NATIVE"
