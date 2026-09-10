@@ -167,6 +167,13 @@ variable "autoscaling_total_max_nodes" {
   }
 }
 
+variable "ignore_node_count_changes" {
+  description = "Ignore external node count changes while still allowing explicit changes to static_node_count. Does not enable GKE autoscaling."
+  type        = bool
+  default     = false
+  nullable    = false
+}
+
 variable "static_node_count" {
   description = "The static number of nodes in the node pool. If set, autoscaling will be disabled."
   type        = number
