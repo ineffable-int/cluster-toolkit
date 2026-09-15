@@ -260,6 +260,12 @@ variable "enable_cloud_nat" {
   default     = true
 }
 
+variable "nat_endpoint_independent_mapping" {
+  type        = bool
+  description = "Enable endpoint-independent mapping on each Cloud NAT so the same internal source maps to the same external port regardless of destination (lets NAT-traversal protocols such as WireGuard/Tailscale establish direct paths). Incompatible with dynamic port allocation."
+  default     = false
+}
+
 variable "extra_iap_ports" {
   type        = list(string)
   description = "A list of TCP ports for which to create firewall rules that enable IAP for TCP forwarding (use dedicated enable_iap variables for standard ports)"

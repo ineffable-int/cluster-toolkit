@@ -271,7 +271,8 @@ module "cloud_router" {
   nats = length(module.nat_ip_addresses[each.value].self_links) == 0 ? [] : [
     {
       name : "cloud-nat-${each.value}",
-      nat_ips : module.nat_ip_addresses[each.value].self_links
+      nat_ips : module.nat_ip_addresses[each.value].self_links,
+      enable_endpoint_independent_mapping : var.nat_endpoint_independent_mapping
     },
   ]
 }
