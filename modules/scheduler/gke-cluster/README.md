@@ -111,7 +111,7 @@ limitations under the License.
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.12.2 |
 | <a name="requirement_google"></a> [google](#requirement\_google) | >= 7.20.0 |
-| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 7.20.0 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | >= 7.29.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.36 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.13 |
 
@@ -120,7 +120,7 @@ limitations under the License.
 | Name | Version |
 | ---- | ------- |
 | <a name="provider_google"></a> [google](#provider\_google) | >= 7.20.0 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | >= 7.20.0 |
+| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | >= 7.29.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.36 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.13 |
@@ -214,6 +214,7 @@ limitations under the License.
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID to host the cluster in. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The region to host the cluster in. | `string` | n/a | yes |
 | <a name="input_release_channel"></a> [release\_channel](#input\_release\_channel) | The release channel of this cluster. Accepted values are `UNSPECIFIED`, `RAPID`, `REGULAR`, `STABLE` and `EXTENDED`. Refer this documentation for more details: https://docs.cloud.google.com/kubernetes-engine/docs/concepts/release-channels#channels | `string` | `"UNSPECIFIED"` | no |
+| <a name="input_secret_sync_config"></a> [secret\_sync\_config](#input\_secret\_sync\_config) | Configuration for synchronizing Secret Manager values into Kubernetes Secrets. Requires GKE 1.33 or later, Workload Identity Federation for GKE, and google-beta provider 7.29.0 or later. | <pre>object({<br/>    enabled = bool<br/>    rotation_config = optional(object({<br/>      enabled           = optional(bool, true)<br/>      rotation_interval = optional(string, "300s")<br/>    }))<br/>  })</pre> | `null` | no |
 | <a name="input_service_account"></a> [service\_account](#input\_service\_account) | DEPRECATED: use service\_account\_email and scopes. | <pre>object({<br/>    email  = string,<br/>    scopes = set(string)<br/>  })</pre> | `null` | no |
 | <a name="input_service_account_email"></a> [service\_account\_email](#input\_service\_account\_email) | Service account e-mail address to use with the system node pool | `string` | `null` | no |
 | <a name="input_service_account_scopes"></a> [service\_account\_scopes](#input\_service\_account\_scopes) | Scopes to to use with the system node pool. | `set(string)` | <pre>[<br/>  "https://www.googleapis.com/auth/cloud-platform"<br/>]</pre> | no |

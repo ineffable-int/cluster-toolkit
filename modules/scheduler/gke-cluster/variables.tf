@@ -219,6 +219,18 @@ variable "enable_managed_lustre_csi" {
   default     = false
 }
 
+variable "secret_sync_config" {
+  description = "Configuration for synchronizing Secret Manager values into Kubernetes Secrets. Requires GKE 1.33 or later, Workload Identity Federation for GKE, and google-beta provider 7.29.0 or later."
+  type = object({
+    enabled = bool
+    rotation_config = optional(object({
+      enabled           = optional(bool, true)
+      rotation_interval = optional(string, "300s")
+    }))
+  })
+  default = null
+}
+
 variable "enable_ray_operator" {
   description = "The status of the Ray operator addon, This feature enables Kubernetes APIs for managing and scaling Ray clusters and jobs. You control and are responsible for managing ray.io custom resources in your cluster. This feature is not compatible with GKE clusters that already have another Ray operator installed. Supports clusters on Kubernetes version 1.29.8-gke.1054000 or later."
   type        = bool

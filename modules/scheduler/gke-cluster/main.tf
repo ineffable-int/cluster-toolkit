@@ -175,6 +175,21 @@ resource "google_container_cluster" "gke_cluster" {
 
   enable_shielded_nodes = var.enable_shielded_nodes
 
+  dynamic "secret_sync_config" {
+    for_each = var.secret_sync_config != null ? [var.secret_sync_config] : []
+    content {
+      enabled = secret_sync_config.value.enabled
+
+      dynamic "rotation_config" {
+        for_each = secret_sync_config.value.rotation_config != null ? [secret_sync_config.value.rotation_config] : []
+        content {
+          enabled           = rotation_config.value.enabled
+          rotation_interval = rotation_config.value.rotation_interval
+        }
+      }
+    }
+  }
+
   dynamic "cluster_autoscaling" {
     for_each = local.autoscaling_enabled ? [1] : []
     content {
