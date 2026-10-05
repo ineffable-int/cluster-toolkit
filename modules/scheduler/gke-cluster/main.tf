@@ -791,7 +791,6 @@ module "kubectl_apply" {
   apply_manifests = concat(flatten([
     for idx, network_info in local.all_networks : [
       {
-        name   = length(network_info.name) <= 35 ? "netparam-${network_info.name}" : "netparam-${substr(network_info.name, 0, 29)}-${substr(sha1(network_info.name), 0, 5)}"
         source = "${path.module}/templates/gke-network-paramset.yaml.tftpl",
         template_vars = {
           name            = network_info.name,
@@ -801,7 +800,6 @@ module "kubectl_apply" {
         }
       },
       {
-        name          = length(network_info.name) <= 37 ? "netobj-${network_info.name}" : "netobj-${substr(network_info.name, 0, 31)}-${substr(sha1(network_info.name), 0, 5)}"
         source        = "${path.module}/templates/network-object.yaml.tftpl",
         template_vars = { name = network_info.name }
       }
