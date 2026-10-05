@@ -370,8 +370,14 @@ resource "google_container_cluster" "gke_cluster" {
     gcs_fuse_csi_driver_config {
       enabled = var.enable_gcsfuse_csi
     }
-    high_scale_checkpointing_config {
-      enabled = var.enable_multi_tier_checkpointing
+    # Voyager-local: emit only when enabled. A static `enabled = false` block
+    # plans an in-place cluster update on clusters created without it, since
+    # their state records no block (same pattern as confidential_nodes, #6254).
+    dynamic "high_scale_checkpointing_config" {
+      for_each = var.enable_multi_tier_checkpointing ? [1] : []
+      content {
+        enabled = true
+      }
     }
     gce_persistent_disk_csi_driver_config {
       enabled = var.enable_persistent_disk_csi
