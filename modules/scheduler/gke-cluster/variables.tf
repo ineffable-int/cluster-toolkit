@@ -237,6 +237,16 @@ variable "enable_dcgm_monitoring" {
   default     = true
 }
 
+variable "logging_components" {
+  description = "List of GKE logging components to enable (SYSTEM_COMPONENTS, WORKLOADS, APISERVER, SCHEDULER, CONTROLLER_MANAGER). If empty, GKE logging is disabled."
+  type        = list(string)
+  nullable    = false
+  default = [
+    "SYSTEM_COMPONENTS",
+    "WORKLOADS"
+  ]
+}
+
 variable "monitoring_components" {
   description = "List of GKE monitoring components to enable. If empty, GKE monitoring is disabled."
   type        = list(string)

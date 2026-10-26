@@ -50,11 +50,6 @@ locals {
   # multi networking needs enabled Dataplane v2
   derived_enable_dataplane_v2 = coalesce(var.enable_dataplane_v2, local.derived_enable_multi_networking)
 
-  default_logging_component = [
-    "SYSTEM_COMPONENTS",
-    "WORKLOADS"
-  ]
-
   # Check if n4-standard-4 is present across all target system node pool zones
   n4_available_in_catalog = length(local.target_system_node_pool_zones) > 0 && alltrue([
     for z in local.target_system_node_pool_zones : length(data.google_compute_machine_types.available_system_machines[z].machine_types) > 0
@@ -507,7 +502,7 @@ resource "google_container_cluster" "gke_cluster" {
   }
 
   logging_config {
-    enable_components = local.default_logging_component
+    enable_components = var.logging_components
   }
 
   dynamic "managed_machine_learning_diagnostics_config" {
