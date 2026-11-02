@@ -302,9 +302,14 @@ resource "google_container_node_pool" "node_pool" {
 
     linux_node_config {
       sysctls = var.linux_node_config.sysctls
-      hugepages_config {
-        hugepage_size_2m = try(var.linux_node_config.hugepages_config.hugepage_size_2m, null)
-        hugepage_size_1g = try(var.linux_node_config.hugepages_config.hugepage_size_1g, null)
+      # Voyager-local: an empty block changes GKE's stored config, and adding
+      # it to a pool that lacks it recreates every node. Emit it only when set.
+      dynamic "hugepages_config" {
+        for_each = try(var.linux_node_config.hugepages_config, null) != null ? [1] : []
+        content {
+          hugepage_size_2m = try(var.linux_node_config.hugepages_config.hugepage_size_2m, null)
+          hugepage_size_1g = try(var.linux_node_config.hugepages_config.hugepage_size_1g, null)
+        }
       }
     }
 
@@ -717,9 +722,14 @@ resource "google_container_node_pool" "subblock_node_pool" {
 
     linux_node_config {
       sysctls = var.linux_node_config.sysctls
-      hugepages_config {
-        hugepage_size_2m = try(var.linux_node_config.hugepages_config.hugepage_size_2m, null)
-        hugepage_size_1g = try(var.linux_node_config.hugepages_config.hugepage_size_1g, null)
+      # Voyager-local: an empty block changes GKE's stored config, and adding
+      # it to a pool that lacks it recreates every node. Emit it only when set.
+      dynamic "hugepages_config" {
+        for_each = try(var.linux_node_config.hugepages_config, null) != null ? [1] : []
+        content {
+          hugepage_size_2m = try(var.linux_node_config.hugepages_config.hugepage_size_2m, null)
+          hugepage_size_1g = try(var.linux_node_config.hugepages_config.hugepage_size_1g, null)
+        }
       }
     }
 
