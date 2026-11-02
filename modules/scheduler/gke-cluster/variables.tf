@@ -341,6 +341,14 @@ variable "system_node_pool_kubernetes_labels" {
   type        = map(string)
   default     = null
 }
+variable "system_node_pool_linux_node_config" {
+  description = "Linux node configuration (sysctls) for the system node pool. Null leaves it unset."
+  type = object({
+    sysctls = map(string)
+  })
+  default = null
+}
+
 variable "system_node_pool_image_type" {
   description = "The default image type used by NAP once a new node pool is being created. Use either COS_CONTAINERD or UBUNTU_CONTAINERD."
   type        = string
