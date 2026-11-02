@@ -376,6 +376,15 @@ module "install_nvidia_dra_driver" {
             operator: Equal
             value: arm64
             effect: NoSchedule
+          # voyager: fly node taints (`fly taint rack` isolation and the
+          # startup verification gate) must not drop the DRA kubelet plugin,
+          # or the node loses ComputeDomain/IMEX. Any value, NoSchedule only.
+          - key: fly.ineffable.ai/isolation
+            operator: Exists
+            effect: NoSchedule
+          - key: fly.ineffable.ai/unverified
+            operator: Exists
+            effect: NoSchedule
 
       EOF
   ]
