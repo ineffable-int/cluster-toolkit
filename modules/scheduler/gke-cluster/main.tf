@@ -553,6 +553,14 @@ resource "google_container_node_pool" "system_node_pools" {
     enable_confidential_storage = var.enable_confidential_storage
     boot_disk_kms_key           = var.boot_disk_kms_key
 
+    # Voyager-local: emitted only when set, so pools created without it plan no change.
+    dynamic "linux_node_config" {
+      for_each = var.system_node_pool_linux_node_config != null ? [1] : []
+      content {
+        sysctls = var.system_node_pool_linux_node_config.sysctls
+      }
+    }
+
     dynamic "confidential_nodes" {
       for_each = var.enable_confidential_nodes ? [1] : []
       content {
