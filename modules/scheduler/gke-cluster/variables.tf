@@ -349,6 +349,18 @@ variable "system_node_pool_linux_node_config" {
   default = null
 }
 
+variable "system_node_pool_enable_gcfs" {
+  description = "Enable Image streaming (GCFS) on the system node pool. False leaves it unset."
+  type        = bool
+  default     = false
+}
+
+variable "system_node_pool_max_parallel_image_pulls" {
+  description = "Image pulls the system node pool's kubelet runs at once; GKE allows 2 to 5. Null leaves it unset."
+  type        = number
+  default     = null
+}
+
 variable "system_node_pool_image_type" {
   description = "The default image type used by NAP once a new node pool is being created. Use either COS_CONTAINERD or UBUNTU_CONTAINERD."
   type        = string

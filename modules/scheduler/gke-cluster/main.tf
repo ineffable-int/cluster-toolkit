@@ -557,6 +557,23 @@ resource "google_container_node_pool" "system_node_pools" {
       }
     }
 
+    # Voyager-local, likewise emitted only when set.
+    dynamic "gcfs_config" {
+      for_each = var.system_node_pool_enable_gcfs ? [1] : []
+      content {
+        enabled = true
+      }
+    }
+
+    # Voyager-local, likewise; the read-only port stays off, as the cluster default sets it.
+    dynamic "kubelet_config" {
+      for_each = var.system_node_pool_max_parallel_image_pulls != null ? [1] : []
+      content {
+        max_parallel_image_pulls               = var.system_node_pool_max_parallel_image_pulls
+        insecure_kubelet_readonly_port_enabled = "FALSE"
+      }
+    }
+
     dynamic "confidential_nodes" {
       for_each = var.enable_confidential_nodes ? [1] : []
       content {
