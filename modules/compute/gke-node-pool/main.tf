@@ -369,6 +369,9 @@ resource "google_container_node_pool" "node_pool" {
       node_config[0].local_nvme_ssd_block_config,
       # Suppress GKE API read drift where type="COMPACT" is omitted on GET
       placement_policy[0].type,
+      # Voyager-local: GKE auto-upgrade owns node versions; the module wires the
+      # master version, which patch-bumps ahead and would roll every pool.
+      version,
     ]
     precondition {
       condition     = !(length(compact(local.input_reservation_suffixes)) > 0 && length((var.zones != null ? var.zones : [])) == 0)
@@ -779,6 +782,9 @@ resource "google_container_node_pool" "subblock_node_pool" {
       node_config[0].local_nvme_ssd_block_config,
       # Suppress GKE API read drift where type="COMPACT" is omitted on GET
       placement_policy[0].type,
+      # Voyager-local: GKE auto-upgrade owns node versions; the module wires the
+      # master version, which patch-bumps ahead and would roll every pool.
+      version,
     ]
     precondition {
       condition     = !(length(compact(local.input_reservation_suffixes)) > 0 && length((var.zones != null ? var.zones : [])) == 0)
